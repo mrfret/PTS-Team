@@ -267,7 +267,7 @@ webid() {
 
 Note :  Use the link for more information 
 
-https://github.com/MHA-Team/PTS-Team/wiki/PTS-Shield
+https://github.com/mrfret/PTS-Team/wiki/PTS-Shield
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [Z] Exit
