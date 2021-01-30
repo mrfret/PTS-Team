@@ -18,7 +18,7 @@ endline() {
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PTS Now has a new update panel!
-If you're seeing this all you need to do is the follwing,
+If you're seeing this all you need to do is the following,
 
 1.) Read below
 2.) Type, "sudo ptsupdate" once more!
