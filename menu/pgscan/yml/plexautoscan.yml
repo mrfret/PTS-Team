@@ -11,14 +11,14 @@
         pgrole: 'plexautoscan'
         intport: '3468'
         extport: '3468'
-        image: 'sabrsorensen/alpine-plex_autoscan:1df2c05'
+        image: 'mrdoob/pascan:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
-      include_tasks: './core.yml'
+      include_tasks: './core.yml
 
     - name: 'Including PAS Tasks'
-      include_tasks: './pastask.yml'
+      include_tasks: '/pastask.yml'
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
@@ -41,13 +41,11 @@
     - name: 'Setting {{pgrole}} Volumes'
       set_fact:
         pg_volumes:
-          - '/mnt/unionfs/:/data'
-          - '/opt/appdata/plexguide:/rclone_config'
           - '/opt/appdata/{{pgrole}}/config:/config'
           - '/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Plug-in Support/Databases/:/plexDb'
-          - '{{path.stdout}}:{{path.stdout}}'
           - '/etc/localtime:/etc/localtime:ro'
-          - '/var/run/docker.sock:/var/run/docker.sock'
+          - '/var/run/docker.sock:/var/run/docker.sock:ro'
+          - '{{path.stdout}}:{{path.stdout}}'
 
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
