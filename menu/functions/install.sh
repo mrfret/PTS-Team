@@ -235,8 +235,8 @@ clone() {
 file="${abc}/new.install"
 if [[ -f "$file" ]]; then
 	 echo 'pgclone' >${abc}/pgcloner.rolename
-	 echo 'PTS-Clone' >${abc}/pgcloner.roleproper
-	 echo 'PTS-Clone' >${abc}/pgcloner.projectname
+	 echo 'PGClone' >${abc}/pgcloner.roleproper
+	 echo 'PGClone' >${abc}/pgcloner.projectname
 	 echo 'final' >${abc}/pgcloner.projectversion
 	 echo 'pgclone.sh' >${abc}/pgcloner.startlink
      ansible-playbook "/opt/plexguide/menu/pgcloner/clone/primary.yml"
