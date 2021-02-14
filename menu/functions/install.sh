@@ -20,7 +20,6 @@ pginstall() {
   core alias
   core folders
   core dependency
-  core mergerfsinstall
   core dockerinstall
   core docstart
   rollingpart
