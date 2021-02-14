@@ -545,38 +545,6 @@ EOF
   read -p 'Confirm Info | PRESS [ENTER] ' typed </dev/tty
   question1
 }
-
-prefill() {
-clear
-chk=$(figlet traktarr | lolcat )
-  tee <<-EOF
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 traktarr prefilling the system
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-[1] Prefilling allowed (Runs a daily job that grabs up to 50 shows and
-      movies from multiple sources (porkie16 / mrdoob / enormoz / others)
-      Warning - this will fill up your queue quickly.
-
-[2] Prefilling disable
-
-[Z] - Exit
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-
- echo
-  read -p 'Confirm Info | PRESS [ENTER] ' typed </dev/tty
-
-  case $typed in
-  1) ansible-playbook /opt/plexguide/menu/traktarr/traktarr-list/prefillallow.yml && question1 ;;
-  2) ansible-playbook /opt/plexguide/menu/traktarr/traktarr-list/prefillremove.yml && question1 ;;
-  z) exit ;;
-  Z) exit ;;
-  *) question1 ;;
-  esac
-}
 # BAD INPUT
 badinput() {
   echo
@@ -632,7 +600,7 @@ checkcase() {
 		━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 		EOF
-    read -p 'Confirm Info | PRESS [ENTER] ' typed </dev/tty
+        read -p 'Confirm Info | PRESS [ENTER] ' typed </dev/tty
 		exit 0
 	elif [[ "$sonarr" = "sonarr" ]] && [[ "$radarr" = "" ]]; then
 		echo "⛔  WARNING! - Traktarr will only work for shows! Radarr Not Running!" >/var/plexguide/traktarr/docker.status
@@ -681,8 +649,7 @@ NOTE: Changes Made? Must Redeploy Traktarr when Complete!
 
 [10] Deploy Traktarr                     [ $dstatus ]
 
-[11] traktarr prefilling the system
-[12] traktarr commands
+[11] traktarr commands
 
 [C] Credits
 
@@ -760,8 +727,7 @@ EOF
     fi
     ansible-playbook /opt/plexguide/menu/pg.yml --tags traktarr && question1 ;;
 	
-  11) prefill && clear && question1  ;;
-  12) endbanner  && clear && question1  ;;
+  11) endbanner  && clear && question1  ;;
   C) credits  && clear && question1  ;;
   c) credits  && clear && question1  ;;
   z) exit ;;

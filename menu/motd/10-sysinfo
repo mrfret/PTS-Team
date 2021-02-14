@@ -31,15 +31,6 @@ baseused=$(df -h / | awk '{ a = $3 } END { print a }')
 baseavi=$(df -h / | awk '{ a = $4 } END { print a }')
 basepercent=$(df -h | awk '{if($(NF) == "/") {print $(NF-1); exit;}}')
 
-#google hack for loginshell
-
-tdrive=$(tail -n 1 /var/plexguide/tduncrypt.log)
-gdrive=$(tail -n 1 /var/plexguide/gduncrypt.log)
-tcrypt=$(tail -n 1 /var/plexguide/tdcrypt.log)
-gcrypt=$(tail -n 1 /var/plexguide/gdcrypt.log)
-
-wisword=$(/usr/games/fortune -as | sed "s/^/ /")
-
 ##security part
 failledssh=$(cat /var/log/auth.log | grep -i "fail" | wc -l)
 failledsshacc=$(head -n1 /var/log/auth.log | awk '{print $1, $2 ,$3 }')
@@ -52,7 +43,7 @@ ${W}System information as of $(date) :
 
 $W  Hostname.......: $W$HSTNAME
 $W  Distro.........: $W$(lsb_release -s -d)
-$W  PTS-Version....: $G$PTS
+$W  Version........: $G$PTS
 $W  Kernel.........: $W$(uname -sr)
 
 $W  Uptime.........: $W$(uptime -p)
@@ -77,12 +68,4 @@ $W  Storage - Local
 $W  /...............: $W$baseused USED, $W$baseavi Avail, $W$basepercent
 $W  /mnt........... : $W$mntused USED, $W$mntavi Avail, $W$mntpercent
 
-$W  Storage - Cloud
-$W  GDrive | uncrypted : $G$gdrive
-$W  TDrive | uncrypted : $G$tdrive
-$W  GDrive | crypted   : $G$gcrypt
-$W  TDrive | crypted   : $G$tcrypt
-
-$W %++++++++++ WISE WORD OF THE DAY ++++++++++%
-$W $W$wisword
-$W %++++++++++ WISE WORD OF THE DAY ++++++++++%"
+$W %++++++++++ +++++++++++++++++ ++++++++++%"
