@@ -9,7 +9,7 @@
 - hosts: localhost
   gather_facts: false
   tasks:
-    - name: Check Service's Existance
+    - name: Check Services Existance
       stat:
         path: '/etc/systemd/systemd/localspace.service'
       register: pgp
