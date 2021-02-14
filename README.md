@@ -1,5 +1,3 @@
-BE AWARE THIS IS A WORK IN PROGRESS. I BARELY HAVE A CLUE SO USE AT YOUR OWN RISK!!!
-
 _**Table of Contents**_
 
 1. [Install](#1-install)
