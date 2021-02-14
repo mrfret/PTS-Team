@@ -96,16 +96,16 @@ updateprime() {
 gcecheck() {
 gcheck=$(dnsdomainname | tail -c 10)
 if [[ "$gcheck" == ".internal" ]]; then
-   if [[ "$(tail -n 1 /var/plexguide/gce.done)" == "1" ]]; then
-   tee <<-EOF
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   📂  Google Cloud Feeder Edition SET!
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   NVME already mounted on /mnt with size $(df -h /mnt/ --total --local -x tmpfs | grep 'total' | awk '{print $2}')
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   EOF
-   echo "YES" >/var/plexguide/pg.gce
-   else bash /opt/plexguide/menu/pggce/gcechecker.sh; fi
+        if [[ "$(tail -n 1 /var/plexguide/gce.done)" == "1" ]]; then
+		tee <<-EOF
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        📂  Google Cloud Feeder Edition SET!
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         NVME already mounted on /mnt with size $(df -h /mnt/ --total --local -x tmpfs | grep 'total' | awk '{print $2}')
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+		EOF
+		echo "YES" >/var/plexguide/pg.gce
+        else bash /opt/plexguide/menu/pggce/gcechecker.sh; fi
 else echo "NO" >/var/plexguide/pg.gce; fi
 }
 
