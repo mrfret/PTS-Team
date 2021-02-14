@@ -31,7 +31,6 @@ pginstall() {
   core serverid
   core prune
   pgedition
-  core mountcheck
   emergency
   pgdeploy
 }
@@ -160,13 +159,9 @@ prune() {
 gcloud() { 
   ansible-playbook /opt/plexguide/menu/pg.yml --tags gcloud_sdk
 }
-mergerfsinstall() { 
-  ansible-playbook /opt/plexguide/menu/pg.yml --tags mergerfsinstall
-}
 motd() { 
   ansible-playbook /opt/plexguide/menu/motd/motd.yml
 }
-
 newinstall() {
   rm -rf ${abc}/pg.exit 1>/dev/null 2>&1
   file="${abc}/new.install"
