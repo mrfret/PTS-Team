@@ -166,9 +166,7 @@ mergerfsinstall() {
 motd() { 
   ansible-playbook /opt/plexguide/menu/motd/motd.yml
 }
-mountcheck() { 
-  ansible-playbook /opt/plexguide/menu/installer/mcdeploy.yml
-}
+
 newinstall() {
   rm -rf ${abc}/pg.exit 1>/dev/null 2>&1
   file="${abc}/new.install"
