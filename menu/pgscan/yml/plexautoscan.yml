@@ -15,10 +15,10 @@
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'
-      include_tasks: './core.yml
+      include_tasks: './core.yml'
 
     - name: 'Including PAS Tasks'
-      include_tasks: '/pastask.yml'
+      include_tasks: './pastask.yml'
 
     # LABELS ######################################################################
     - name: 'Adding Traefik'
