@@ -38,6 +38,16 @@ badinputcore() {
   read -p 'PRESS [ENTER] ' typed </dev/tty
 }
 
+cronexe() {
+  croncheck=$(cat /opt/coreapps/apps/_cron.list | grep -c "\<$p\>")
+  if [ "$croncheck" == "0" ]; then bash /opt/plexguide/menu/cron/cron.sh; fi
+}
+
+cronmass() {
+  croncheck=$(cat /opt/coreapps/apps/_cron.list | grep -c "\<$p\>")
+  if [ "$croncheck" == "0" ]; then bash /opt/plexguide/menu/cron/cron.sh; fi
+}
+
 initial() {
   rm -rf /var/plexguide/pgbox.output 1>/dev/null 2>&1
   rm -rf /var/plexguide/pgbox.buildup 1>/dev/null 2>&1
@@ -187,11 +197,24 @@ question2() {
   # Image Selector
   image=off
   while read p; do
+
     echo "$p" >/tmp/program_var
+
     bash /opt/coreapps/apps/image/_image.sh
+
     # CName & Port Execution
     bash /opt/plexguide/menu/pgbox/cname.sh
   done </var/plexguide/pgbox.buildup
+
+  # Cron Execution
+  edition=$(cat /var/plexguide/pg.edition)
+  if [[ "$edition" == "PG Edition - HD Solo" ]]; then
+    a=b
+  else
+    croncount=$(sed -n '$=' /var/plexguide/pgbox.buildup)
+    echo "false" >/var/plexguide/cron.count
+    if [ "$croncount" -ge 2 ]; then bash /opt/plexguide/menu/cron/mass.sh; fi
+  fi
 
   while read p; do
     tee <<-EOF
@@ -203,11 +226,15 @@ $p - Now Installing!
 EOF
 
     sleep 1
-    value
+	value
     # Store Used Program
     echo "$p" >/tmp/program_var
     # Execute Main Program
     ansible-playbook /opt/coreapps/apps/$p.yml
+
+    if [[ "$edition" == "PG Edition - HD Solo" ]]; then
+      a=b
+    elif [ "$croncount" -eq "1" ]; then cronexe; fi
 
     # End Banner
     bash /opt/plexguide/menu/pgbox/endbanner.sh >>/tmp/output.info

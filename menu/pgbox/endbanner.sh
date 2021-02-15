@@ -18,6 +18,8 @@ ip=$(cat /var/plexguide/server.ip)
 ports=$(cat /var/plexguide/server.ports)
 hdpath=$(cat /var/plexguide/server.hd.path)
 
+
+
 if [ "$program" == "plex" ]; then extra="/web"; else extra=""; fi
 
 tee <<-EOF
@@ -97,24 +99,43 @@ EOF
 
 🌍 Visit the wiki for instructions on how to configure $program.
 
- https://github.com/mrfret/PTS-Team/wiki/$program
+ https://github.com/MHA-Team/PTS-Team/wiki/$program
 
 EOF
 fi
 
 ####--------
 
+
+if [[ "$program" == *"sabnzbd"* ]] || [[ "$program" == *"nzbget"* ]]  ; then
+cclean=$(cat /var/plexguide/cloneclean)
+  tee <<-EOF
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 NOTE / INFO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  for incomplete downloads $program used the folder $hdpath/incomplete/nzb
+  for finished downloads $program used the folder $hdpath/downloads/nzb
+  
+  beware the cloneclean is set to $cclean min
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+  fi
+
 if [[ "$program" == *"sabnzbd"* ]] ; then
-sbakey=$(cat /opt/appdata/sabnzbd/sabnzbd.ini | grep "api_key" | head -n 1 | awk '{print $3}')
+
   tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💬 sabnzbd api_key = $sbakey
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-fi
-
+  fi
 if [[ "$program" == *"rutorrent"* ]] || [[ "$program" == *"qbittorrent"* ]] || [[ "$program" == *"deluge"* ]]; then
+cclean=$(cat /var/plexguide/cloneclean)
+tclean=$(($cclean*2))
   tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -123,11 +144,12 @@ if [[ "$program" == *"rutorrent"* ]] || [[ "$program" == *"qbittorrent"* ]] || [
 
   for incomplete downloads $program used the folder $hdpath/incomplete/torrent
   for finished downloads $program used the folder $hdpath/downloads/torrent
+  
+  beware the cloneclean is set to $tclean min
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-fi
-
+  fi
 if [ "$program" == "plex" ]; then
   tee <<-EOF
 
@@ -144,6 +166,7 @@ EOF
 fi
 
 if [ "$hdpath" != "/mnt" ]; then
+sbakey=$(cat /opt/appdata/sabnzbd/sabnzbd.ini | grep "api_key" | head -n 1 | awk '{print $3}')
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 You must add /mnt self to the docker container again

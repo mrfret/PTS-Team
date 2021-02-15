@@ -19,14 +19,14 @@
     state: stopped
   when: plex_pas_config.stat.exists
 
-- name: Remove old files
-  file:
-    path: "{{ item }}"
-    state: absent   
-  with_items:
-    - /opt/plexautoscan
-    - /opt/appdata/plexautoscan
-    - /etc/systemd/system/plex_autoscan.service
+- name: Remove old Install
+  shell: 'sudo rm -rf /opt/plex_autoscan'
+
+- name: Remove old Install
+  shell: 'sudo rm -rf /opt/appdata/plexautoscan/'
+
+- name: Remove old service
+  shell: 'sudo rm -rf /etc/systemd/system/plex_autoscan.service'
 
 - name: Set plex.user fact | token
   shell: 'cat /var/plexguide/pgscan/plex.token'
@@ -52,32 +52,14 @@
   shell: 'cat /var/plexguide/pgscan/plex.docker'
   register: plex_docker_user
 
-- name: Register Plex lib folder
-  shell: 'cat /var/plexguide/pgscan/plex.path'
-  register: plex_lib_folder
-
-- name: Register GDrive Client_ID
-  shell: 'cat /var/plexguide/pgscan/gdrive.id'
-  register: gdriveid
-
-- name: Register serverpath
-  shell: 'cat /var/plexguide/server.hd.path'
-  register: path
-  
-- name: Register GDrive Client_Secret
-  shell: 'cat /var/plexguide/pgscan/gdrive.secret'
-  register: gdrivesecret
-
 - name: Create mounted.bin for trash
-  file: 
-    path: /mnt/unionfs/mounted.bin
-    state: touch
-    mode: '0755'
+  shell: 'touch /mnt/unionfs/mounted.bin'
 
-- name: Set User Permission  for Plex Folder
-  file: "path={{ item }} state=directory mode=0775 owner=1000 group=1000 recurse=no"
-  with_items:
-    - '/opt/appdata/plex/database/Library/'
+- name: Set User Permission  for Plex Folder | part 1
+  shell: 'chown 1000:1000 "/opt/appdata/plex/database/Library/Application Support/"'
+
+- name: Set User Permission  for Plex Folder | part 2
+  shell: 'chown 1000:1000 /opt/appdata/plex/database/Library/'
 
 - name: Display Plex Auth Token
   debug:
@@ -98,21 +80,6 @@
       - jq
       - moreutils
 
-- name: Create plex_autoscan directories
-  file: "path={{ item }} state=directory mode=0775 owner=1000 group=1000 recurse=yes"
-  with_items:
-    - '/opt/appdata/plexautoscan/'
-    - '/opt/appdata/plexautoscan/config'
-    - '/opt/appdata/plexautoscan/config/rclone'
-
-- name: copy rclone.conf 
-  copy:
-    src: /opt/appdata/plexguide/rclone.conf
-    dest: /opt/appdata/plexautoscan/config/rclone/rclone.conf
-    owner: 1000
-    group: 1000
-    mode: '0755'
-
 - name: Settings | Check if 'config.json' exists
   stat:
     path: "/opt/appdata/plexautoscan/config.json"
@@ -121,6 +88,12 @@
 - name: Settings | New 'config.json' tasks
   block:
 
+  - name: Create plex_autoscan directories
+    file: "path={{ item }} state=directory mode=0775 owner=1000 group=1000 recurse=yes"
+    with_items:
+      - '/opt/appdata/plexautoscan/'
+      - '/opt/appdata/plexautoscan/config'
+      
   - name: Settings | Import default 'config.json'
     template:
       src: /opt/plexguide/menu/pgscan/templates/config.json.j2
@@ -150,16 +123,7 @@
     shell: 'cat /var/plexguide/pgscan/plex.docker'
     register: plex_docker_user
 
-  - name: Register Plex lib folder
-    shell: 'cat /var/plexguide/pgscan/plex.path'
-    register: plex_lib_folder
-
-  - name: Register GDrive Client_ID
-    shell: 'cat /var/plexguide/pgscan/gdrive.id'
-    register: gdriveid
-
-  - name: Register GDrive Client_Secret
-    shell: 'cat /var/plexguide/pgscan/gdrive.secret'
-    register: gdrivesecret
-
   when: not plex_autoscan_config.stat.exists
+ 
+- name: 'Setting ownership on appdata'
+  shell: 'chown 1000:1000 /opt/appdata/{{pgrole}}'
