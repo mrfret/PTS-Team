@@ -100,7 +100,7 @@ tee <<-EOF
 EOF
      docker stop $typed 1>/dev/null 2>&1
      docker rm $typed 1>/dev/null 2>&1
-     rm -rf /opt/appdata/$typed
+	 rm -rf /opt/appdata/$typed
 fi
 
 if [[ "$drunning" != "$typed" ]]; then
@@ -110,7 +110,7 @@ tee <<-EOF
 🍖  NOM NOM - Removing /opt/appdata/$typed
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-     rm -rf /opt/appdata/$typed
+	 rm -rf /opt/appdata/$typed
 fi
 
 file="/opt/coreapps/apps/$typed.yml"
@@ -120,7 +120,7 @@ if [[ -e "$file" ]]; then
   rm -rf /var/plexguide/community.app
 fi
 
-sleep 1
+sleep 1.5
 
 tee <<-EOF
 

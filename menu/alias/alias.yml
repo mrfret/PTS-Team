@@ -138,6 +138,13 @@
         force: yes
         mode: 0775
 
+    - name: Install mergerfes updater
+      template:
+        src: mgupdate
+        dest: /bin/mgupdate
+        force: yes
+        mode: 0775
+
     - name: Install Backup & Restore
       template:
         src: backup
@@ -163,6 +170,13 @@
       template:
         src: kill_logs
         dest: /bin/kill_logs
+        force: yes
+        mode: 0775
+
+    - name: automatic backup /opt/appdata 
+      template:
+        src: autobackup
+        dest: /bin/autobackup
         force: yes
         mode: 0775
 
