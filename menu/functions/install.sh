@@ -13,6 +13,7 @@ source /opt/plexguide/menu/functions/update.sh
 #######################################################
 
 pginstall() {
+  versionubucheck
   updateprime
   gcecheck
   core pythonstart
@@ -20,21 +21,43 @@ pginstall() {
   core alias
   core folders
   core dependency
+  core mergerfsinstall
   core dockerinstall
   core docstart
   rollingpart
   portainer
+  oruborus
   core motd
   core gcloud
   core cleaner
   core serverid
   core prune
   pgedition
+  core mountcheck
   emergency
   pgdeploy
+  # oruborus
 }
 
-#### INSTALLER FUNCTIONS
+############################################################ INSTALLER FUNCTIONS
+versionubucheck() {
+versioncheck=$(cat /etc/*-release | grep "Ubuntu" | grep -E '19')
+  if [[ "$versioncheck" == "19" ]]; then
+printf '
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⛔ WOAH! ......  System OS Warning!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Supported: UBUNTU 16.xx - 18.10 ~ LTS/SERVER and Debian 9.* / 10
+
+This server may not be supported due to having the incorrect OS detected!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+'
+  exit 1
+  else echo "18" >${abc}/os.version.check; fi
+}
+
 updateprime() {
   abc="/var/plexguide"
   mkdir -p ${abc}
@@ -66,7 +89,7 @@ updateprime() {
   if [[ "$ospgversion" == "Ubuntu" ]]; then
     echo "ubuntu" >${abc}/os.version
   else 
-    echo "debian" >${abc}/os.version
+    echo "debian" >${abc}/os.version; 
   fi
 
   echo "3" >${abc}/pg.mergerfsinstall
@@ -90,6 +113,16 @@ updateprime() {
   echo "7" >${abc}/pg.prune
   echo "21" >${abc}/pg.mountcheck
   echo "11" >${abc}/pg.watchtower
+}
+oruborus() {
+wstatus=$(docker ps --format '{{.Names}}' | grep "watchtower")
+if [[ "$wstatus" == "watchtower" ]]; then 
+    docker stop watchtower >/dev/null 2>&1
+	docker rm watchtower >/dev/null 2>&1
+	ansible-playbook /opt/plexguide/menu/functions/ouroboros.yml
+fi
+ostatus=$(docker ps --format '{{.Names}}' | grep "ouroboros")
+if [[ "$ostatus" != "ouroboros" ]]; then ansible-playbook /opt/plexguide/menu/functions/ouroboros.yml; fi
 }
 gcecheck() {
 gcheck=$(dnsdomainname | tail -c 10)
@@ -115,28 +148,29 @@ rollingpart() {
     rm -rf /opt/{coreapps,communityapps,pgshield} 
     ansible-playbook /opt/plexguide/menu/pgbox/community/community.yml
     ansible-playbook /opt/plexguide/menu/pgbox/core/core.yml
+	clone
     echo "$rolenumber" >${abc}/install.roles
   fi
-}
+ }
 
 core() {
   touch ${abc}/pg."${1}".stored
   start=$(cat /var/plexguide/pg."${1}")
   stored=$(cat /var/plexguide/pg."${1}".stored)
   if [[ "$start" != "$stored" ]]; then
-     $1
-     cat ${abc}/pg."${1}" >${abc}/pg."${1}".stored
+    $1
+    cat ${abc}/pg."${1}" >${abc}/pg."${1}".stored
   fi
 }
 
 alias() { 
-  ansible-playbook /opt/plexguide/menu/alias/alias.yml
+ansible-playbook /opt/plexguide/menu/alias/alias.yml
 }
 aptupdate() { 
-  ansible-playbook /opt/plexguide/menu/pg.yml --tags update
+ansible-playbook /opt/plexguide/menu/pg.yml --tags update
 }
 cleaner() { 
-  ansible-playbook /opt/plexguide/menu/pg.yml --tags autodelete,clean,journal
+ansible-playbook /opt/plexguide/menu/pg.yml --tags autodelete,clean,journal
 }
 dependency() {
   ospgversion=$(cat /var/plexguide/os.version)
@@ -147,19 +181,25 @@ dependency() {
   fi
 }
 docstart() { 
-  ansible-playbook /opt/plexguide/menu/pg.yml --tags docstart
+ansible-playbook /opt/plexguide/menu/pg.yml --tags docstart
 }
 folders() { 
-  ansible-playbook /opt/plexguide/menu/installer/folders.yml
+ansible-playbook /opt/plexguide/menu/installer/folders.yml
 }
 prune() { 
-  ansible-playbook /opt/plexguide/menu/prune/main.yml
+ansible-playbook /opt/plexguide/menu/prune/main.yml
 }
 gcloud() { 
-  ansible-playbook /opt/plexguide/menu/pg.yml --tags gcloud_sdk
+ansible-playbook /opt/plexguide/menu/pg.yml --tags gcloud_sdk
+}
+mergerfsinstall() { 
+ansible-playbook /opt/plexguide/menu/pg.yml --tags mergerfsinstall
 }
 motd() { 
-  ansible-playbook /opt/plexguide/menu/motd/motd.yml
+ansible-playbook /opt/plexguide/menu/motd/motd.yml
+}
+mountcheck() { 
+ansible-playbook /opt/plexguide/menu/installer/mcdeploy.yml
 }
 newinstall() {
   rm -rf ${abc}/pg.exit 1>/dev/null 2>&1
@@ -171,7 +211,7 @@ newinstall() {
   fi
 }
 pgdeploy() { 
-  touch ${abc}/pg.edition && bash /opt/plexguide/menu/start/start.sh 
+touch ${abc}/pg.edition && bash /opt/plexguide/menu/start/start.sh 
 }
 pgedition() {
   file="${abc}/project.deployed"
@@ -187,17 +227,34 @@ portainer() {
 }
 # Roles Ensure that PG Replicates and has once if missing; important for startup, cron and etc
 pgcore() { 
-  file="${abc}/new.install"
-  if [[ -f "$file" ]]; then ansible-playbook /opt/plexguide/menu/pgbox/core/core.yml; fi
-  if [[ -f "$file" ]]; then ansible-playbook /opt/plexguide/menu/pgbox/community/community.yml; fi
+file="${abc}/new.install"
+if [[ -f "$file" ]]; then ansible-playbook /opt/plexguide/menu/pgbox/core/core.yml; fi
+if [[ -f "$file" ]]; then ansible-playbook /opt/plexguide/menu/pgbox/community/community.yml; fi
 }
-
+clone() {
+file="${abc}/new.install"
+if [[ -f "$file" ]]; then
+	 echo 'pgclone' >${abc}/pgcloner.rolename
+	 echo 'PGClone' >${abc}/pgcloner.roleproper
+	 echo 'PGClone' >${abc}/pgcloner.projectname
+	 echo 'final' >${abc}/pgcloner.projectversion
+	 echo 'pgclone.sh' >${abc}/pgcloner.startlink
+     ansible-playbook "/opt/plexguide/menu/pgcloner/clone/primary.yml"
+	 sleep 0.1
+	 echo 'traefik' >${abc}/pgcloner.rolename
+     echo 'Traefik' >${abc}/pgcloner.roleproper
+     echo 'Traefik' >${abc}/pgcloner.projectname
+     echo 'master' >${abc}/pgcloner.projectversion
+     echo 'traefik.sh' >${abc}/pgcloner.startlink
+     ansible-playbook "/opt/plexguide/menu/pgcloner/clone/primary.yml"	 
+fi
+}
 pythonstart() {
-  file="${abc}/new.install"
-  if [[ -f "$file" ]]; then bash /opt/plexguide/menu/roles/pythonstart/pyansible.sh; fi
+file="${abc}/new.install"
+if [[ -f "$file" ]]; then bash /opt/plexguide/menu/roles/pythonstart/pyansible.sh; fi
 }
 dockerinstall() {
-  file="${abc}/new.install"
-  if [[ -f "$file" ]]; then ansible-playbook /opt/plexguide/menu/pg.yml --tags docker; fi
+file="${abc}/new.install"
+if [[ -f "$file" ]]; then ansible-playbook /opt/plexguide/menu/pg.yml --tags docker; fi
 }
 ####EOF###

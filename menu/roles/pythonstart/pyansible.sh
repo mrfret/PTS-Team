@@ -24,7 +24,6 @@ python -m pip install --disable-pip-version-check --upgrade --force-reinstall \
   requests \
   netaddr \
   lxml
-
 python -m pip install --disable-pip-version-check --upgrade --force-reinstall ansible==${1-2.8.2}
 
 pip install -U --force-reinstall pip==9.0.3
@@ -33,7 +32,6 @@ pip install --upgrade --force-reinstall pip==9.0.3
 pip install --upgrade pip
 pip install docker-py --ignore-installed PyYAML
 
-pip3 list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 pip3 install -U 1>/dev/null 2>&1
 
 ## Copy pip to /usr/bin
 cp /usr/local/bin/pip /usr/bin/pip
