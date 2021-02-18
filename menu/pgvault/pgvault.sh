@@ -8,10 +8,13 @@
 source /opt/pgvault/functions.sh
 source /opt/pgvault/pgvault.func
 file="/var/plexguide/restore.id"
+bdrive="/var/plexguide/backupdrive.pgvault"
 if [ ! -e "$file" ]; then
   echo "[NOT-SET]" >/var/plexguide/restore.id
 fi
-
+if [ ! -f "$bdrive" ]; then
+  echo "gdrive" >/var/plexguide/backupdrive.pgvault
+fi
 initial
 apprecall
 primaryinterface
