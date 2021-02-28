@@ -59,16 +59,6 @@ sudo wget -qO- https://raw.githubusercontent.com/mrfret/Install/master/install.s
 The installation will then take you through the setup which is self-explanatory.  
 
 
-### Optional - updating your PTS-Team fork to the new MHA-Team fork
-IDoMnCi came up with a great script to change all the links on an existing PTS-Team fork (NOT PG 8.x) to the MHA-Team fork.
-Details - https://github.com/mrfret/Install/pull/4
-```
-sudo wget -qO- https://raw.githubusercontent.com/mrfret/Install/master/relocate.sh | sudo bash
-
-sudo ptsupdate
-
-```
-
 ### Testing Only - Not Supported - Install PTS-Team fork via Windows 10 20H1 WSL2 Ubuntu 18.04
 
 Sammykins has tested installing the PTS-Team form on a Windows 10 machine via the new WSL2 system built into Windows.
